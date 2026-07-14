@@ -43,9 +43,9 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
       if (isSearchOpen || searchQuery) return;
 
       const scrollPosition = window.scrollY + 100;
-      
+
       let currentActiveId = activeCategoryId;
-      
+
       for (const cat of nonEmptyCategories) {
         const element = sectionRefs.current[cat.id];
         if (element) {
@@ -55,7 +55,7 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
           }
         }
       }
-      
+
       if (currentActiveId !== activeCategoryId) {
         setActiveCategoryId(currentActiveId);
       }
@@ -87,7 +87,7 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
 
   const filteredCategories = nonEmptyCategories.map(cat => ({
     ...cat,
-    items: cat.items.filter(item => 
+    items: cat.items.filter(item =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (item.name_en && item.name_en.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (item.name_ru && item.name_ru.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -98,9 +98,9 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
     <>
       {/* Unified Top Header: Hamburger [Categories] Search */}
       <header className="sticky top-0 w-full z-40 bg-background border-b border-border shadow-sm">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
-          
-          <button 
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+
+          <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 -ml-2 text-foreground hover:bg-secondary rounded-full shrink-0"
           >
@@ -108,8 +108,8 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
           </button>
 
           {isSearchOpen ? (
-            <input 
-              type="text" 
+            <input
+              type="text"
               autoFocus
               placeholder={t.search}
               value={searchQuery}
@@ -118,14 +118,14 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
             />
           ) : (
             <div className="flex-1 flex items-center min-w-0">
-              <button 
+              <button
                 className="hidden md:flex p-1 text-muted-foreground hover:text-foreground shrink-0"
                 onClick={() => tabsScrollRef.current?.scrollBy({ left: -200, behavior: 'smooth' })}
               >
                 <ChevronLeft size={20} />
               </button>
-              
-              <div 
+
+              <div
                 ref={tabsScrollRef}
                 className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-2"
               >
@@ -136,7 +136,7 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
                     onClick={() => scrollToCategory(cat.id)}
                     className={classNames(
                       'whitespace-nowrap px-4 py-1.5 rounded-xl font-bold text-sm transition-all',
-                      activeCategoryId === cat.id 
+                      activeCategoryId === cat.id
                         ? 'bg-primary text-primary-foreground shadow-sm'
                         : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                     )}
@@ -146,7 +146,7 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
                 ))}
               </div>
 
-              <button 
+              <button
                 className="hidden md:flex p-1 text-muted-foreground hover:text-foreground shrink-0"
                 onClick={() => tabsScrollRef.current?.scrollBy({ left: 200, behavior: 'smooth' })}
               >
@@ -155,7 +155,7 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
             </div>
           )}
 
-          <button 
+          <button
             onClick={() => {
               setIsSearchOpen(!isSearchOpen);
               if (isSearchOpen) setSearchQuery('');
@@ -169,18 +169,18 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
 
       <main className="container mx-auto px-4 py-6 md:py-8 space-y-12 pb-32">
         {(searchQuery ? filteredCategories : nonEmptyCategories).map(cat => (
-          <div 
-            key={cat.id} 
-            id={cat.id} 
+          <div
+            key={cat.id}
+            id={cat.id}
             ref={(el) => { sectionRefs.current[cat.id] = el; }}
             className="scroll-mt-24"
           >
             <h2 className="text-2xl font-bold mb-6 text-foreground">{getName(cat)}</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-6">
               {cat.items.map(item => (
-                <ProductCard 
-                  key={item.id} 
-                  item={item} 
+                <ProductCard
+                  key={item.id}
+                  item={item}
                   onCardClick={(dish) => setSelectedDish(dish)}
                 />
               ))}
@@ -194,20 +194,20 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
         )}
       </main>
 
-      <Sidebar 
-        categories={nonEmptyCategories} 
-        isOpen={isSidebarOpen} 
-        onClose={() => setSidebarOpen(false)} 
+      <Sidebar
+        categories={nonEmptyCategories}
+        isOpen={isSidebarOpen}
+        onClose={() => setSidebarOpen(false)}
         onCategoryClick={scrollToCategory}
       />
 
       <StickyCart onClick={() => setCartOpen(true)} />
       <CartDrawer isOpen={isCartOpen} onClose={() => setCartOpen(false)} />
-      
-      <DishDetailsModal 
-        item={selectedDish} 
-        isOpen={!!selectedDish} 
-        onClose={() => setSelectedDish(null)} 
+
+      <DishDetailsModal
+        item={selectedDish}
+        isOpen={!!selectedDish}
+        onClose={() => setSelectedDish(null)}
       />
     </>
   );
