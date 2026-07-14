@@ -1,26 +1,120 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --font-sans: var(--font-geist-sans), "Inter", "Outfit", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "Fira Code", monospace;
 
-@theme inline {
+  /* Clean UI Tokens based on mockup */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-radius: var(--radius);
+}
+
+:root {
+  /* Light, Clean Theme matching the Mockup */
+  --background: #f4f5f7;
+  --foreground: #1c1c1e;
+  --card: #ffffff;
+  --card-foreground: #1c1c1e;
+  --popover: #ffffff;
+  --popover-foreground: #1c1c1e;
+  
+  /* Primary - Charcoal/Black as seen in the mockup top bar and active tabs */
+  --primary: #2c2c2e;
+  --primary-foreground: #ffffff;
+  
+  /* Secondary - Soft gray for buttons and inactive tabs */
+  --secondary: #e5e5ea;
+  --secondary-foreground: #1c1c1e;
+  --muted: #f2f2f7;
+  --muted-foreground: #8e8e93;
+  --accent: #e5e5ea;
+  --accent-foreground: #1c1c1e;
+  --destructive: #ff3b30;
+  --destructive-foreground: #ffffff;
+  --border: #e5e5ea;
+  --input: #e5e5ea;
+  --ring: #2c2c2e;
+  --radius: 1.5rem; /* Larger radius for the cards */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Refined Dark Theme */
+    --background: #000000;
+    --foreground: #ffffff;
+    --card: #1c1c1e;
+    --card-foreground: #ffffff;
+    --popover: #1c1c1e;
+    --popover-foreground: #ffffff;
+    --primary: #ffffff;
+    --primary-foreground: #000000;
+    --secondary: #2c2c2e;
+    --secondary-foreground: #ffffff;
+    --muted: #1c1c1e;
+    --muted-foreground: #8e8e93;
+    --accent: #2c2c2e;
+    --accent-foreground: #ffffff;
+    --destructive: #ff453a;
+    --destructive-foreground: #ffffff;
+    --border: #2c2c2e;
+    --input: #2c2c2e;
+    --ring: #ffffff;
   }
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+  background: rgba(28, 28, 30, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Hide scrollbar for clean horizontal scrolls */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Base transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
 }
