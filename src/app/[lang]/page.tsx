@@ -14,8 +14,14 @@ async function getCategories(): Promise<Category[]> {
     };
     
     const [catRes, itemRes] = await Promise.all([
-      fetch(`https://api.restiq.ge/rest/v1/categories?select=*&tenant_id=eq.${TENANT_ID}`, { headers, next: { revalidate: 3600 } }),
-      fetch(`https://api.restiq.ge/rest/v1/items?select=*&tenant_id=eq.${TENANT_ID}`, { headers, next: { revalidate: 3600 } })
+      fetch(
+        `https://api.restiq.ge/rest/v1/categories?select=*&tenant_id=eq.${TENANT_ID}&disable=neq.1`,
+        { headers, next: { revalidate: 3600 } }
+      ),
+      fetch(
+        `https://api.restiq.ge/rest/v1/items?select=*&tenant_id=eq.${TENANT_ID}&disable=neq.1`,
+        { headers, next: { revalidate: 3600 } }
+      )
     ]);
     
     if (!catRes.ok || !itemRes.ok) throw new Error('Failed to fetch from Restiq');
