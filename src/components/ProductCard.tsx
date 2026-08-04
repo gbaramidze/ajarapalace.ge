@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MenuItem } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
@@ -16,7 +16,14 @@ export default function ProductCard({ item, onCardClick }: ProductCardProps) {
   const { cart, addToCart, updateQuantity } = useCart();
   const cartItem = cart.find(i => i.id === item.id);
 
-  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) {
+      setIsLoaded(true);
+    }
+  }, [item.thumb]);
 
   const getName = () => {
     if (lang === 'en' && item.name_en) return item.name_en;
@@ -25,7 +32,7 @@ export default function ProductCard({ item, onCardClick }: ProductCardProps) {
   };
 
   const handleAdd = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent opening the modal when clicking the Add button
+    e.stopPropagation();
     addToCart(item);
   };
 
@@ -36,11 +43,13 @@ export default function ProductCard({ item, onCardClick }: ProductCardProps) {
     >
       <div className="relative h-32 sm:h-48 overflow-hidden bg-secondary">
         <img 
+          ref={imgRef}
           src={item.thumb || undefined} 
           alt={getName()} 
           onLoad={() => setIsLoaded(true)}
-          className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-          loading="lazy"
+          onError={() => setIsLoaded(true)}
+          decoding="async"
+          className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-300 ${isLoaded ? 'opacity-100' : 'opacity-80'}`}
         />
       </div>
       <div className="p-3 md:p-4 flex flex-col flex-1">

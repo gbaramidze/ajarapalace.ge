@@ -11,6 +11,18 @@ export default function CheckoutPage() {
   const { cart, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
   const { t, lang } = useLanguage();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [phone, setPhone] = useState('+995 ');
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value;
+    if (!val.startsWith('+995')) {
+      const digits = val.replace(/\D/g, '');
+      val = '+995 ' + digits;
+    } else if (!val.startsWith('+995 ')) {
+      val = '+995 ' + val.substring(4).trimStart();
+    }
+    setPhone(val);
+  };
 
   const getName = (item: any) => {
     if (lang === 'en' && item.name_en) return item.name_en;
@@ -31,7 +43,7 @@ export default function CheckoutPage() {
     const payload = {
       orderId: newOrderId,
       total: totalPrice.toFixed(2),
-      phone: formData.get('phone'),
+      phone,
       street: formData.get('street'),
       building: formData.get('building'),
       floor: formData.get('floor'),
@@ -76,21 +88,17 @@ export default function CheckoutPage() {
             <CheckCircle2 size={40} className="text-green-500" />
           </div>
           <h2 className="text-2xl font-bold mb-4">
-            {lang === 'ka' ? `შეკვეთა #${orderId} გაფორმებულია` : lang === 'ru' ? `Заказ #${orderId} оформлен` : `Order #${orderId} Placed`}
+            {t.orderPlaced.replace('{id}', orderId.toString())}
           </h2>
           <p className="text-muted-foreground mb-8 text-sm md:text-base">
-            {lang === 'ka' 
-              ? 'რესტორნის ადმინისტრატორი მალე დაგიკავშირდებათ დეტალების დასაზუსტებლად.' 
-              : lang === 'ru' 
-                ? 'Администратор ресторана скоро с вами свяжется для уточнения деталей.' 
-                : 'The restaurant administrator will contact you shortly to clarify the details.'}
+            {t.adminContactDesc}
           </p>
           <Link 
             href="/"
             onClick={() => setIsSuccess(false)}
             className="inline-block w-full bg-primary text-primary-foreground px-6 py-4 rounded-xl font-bold text-lg hover:opacity-90 transition-all"
           >
-            {lang === 'ka' ? 'მთავარზე დაბრუნება' : lang === 'ru' ? 'Вернуться на главную' : 'Back to Home'}
+            {t.backToHome}
           </Link>
         </motion.div>
       </div>
@@ -172,7 +180,7 @@ export default function CheckoutPage() {
               <form className="space-y-4" onSubmit={handleCheckout}>
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t.phone}</label>
-                  <input type="tel" name="phone" required className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm" placeholder="+995" />
+                  <input type="tel" name="phone" required value={phone} onChange={handlePhoneChange} className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm font-medium" />
                 </div>
                 
                 <div className="space-y-1">
@@ -183,26 +191,26 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t.building}</label>
-                    <input type="text" name="building" className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm" placeholder={lang === 'ka' ? 'არასავალდებულო' : lang === 'ru' ? 'необязательно' : 'optional'} />
+                    <input type="text" name="building" className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm" placeholder={t.optional} />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{lang === 'ka' ? 'ბინა' : lang === 'ru' ? 'Квартира' : 'Apartment'}</label>
-                    <input type="text" name="apartment" className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm" />
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t.apartment}</label>
+                    <input type="text" name="apartment" className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm" placeholder={t.optional} />
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t.floor}</label>
-                    <input type="text" name="floor" className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm" />
+                    <input type="text" name="floor" className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm" placeholder={t.optional} />
                   </div>
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t.comments}</label>
-                  <textarea rows={3} name="comments" className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm resize-none" placeholder="Optional..." />
+                  <textarea rows={3} name="comments" className="w-full bg-secondary border-transparent focus:border-primary rounded-xl px-4 py-3 outline-none transition-all text-foreground text-sm resize-none" placeholder={t.optional} />
                 </div>
                 
                 <div className="pt-6 border-t border-border mt-6">
                   <button type="submit" disabled={isLoading} className="w-full bg-primary text-primary-foreground px-6 py-4 rounded-xl font-bold text-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50">
-                    {isLoading ? '...' : (lang === 'ka' ? 'შეკვეთის გაფორმება' : lang === 'ru' ? 'Оформить заказ' : 'Place Order')}
+                    {isLoading ? '...' : t.placeOrder}
                     {!isLoading && <ArrowRight size={20} />}
                   </button>
                 </div>

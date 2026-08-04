@@ -87,9 +87,9 @@ export async function POST(req: Request) {
       console.error("Order list creation failed", await orderListRes.text());
     }
 
-    // 5. Send SMS
+    // 5. Send SMS to all receivers
     const API_KEY = "9e6d0d0adccd457490668c43e2ebc52b";
-    const TARGET_NUMBER = "995579205205";
+    const TARGET_NUMBERS = ["995579205205", "995599777975", "995595178687"];
 
     let text = `New Order #${insertedOrder.id || orderId}\n`;
     text += `Phone: ${phone}\n`;
@@ -106,20 +106,25 @@ export async function POST(req: Request) {
     
     text += `Total: ${total} GEL`;
 
-    const queryParams = new URLSearchParams({
-      key: API_KEY,
-      destination: TARGET_NUMBER,
-      sender: "ajarapalace",
-      urgent: "true",
-      content: text
-    });
+    await Promise.all(TARGET_NUMBERS.map(async (targetNum) => {
+      const queryParams = new URLSearchParams({
+        key: API_KEY,
+        destination: targetNum,
+        sender: "ajarapalace",
+        urgent: "true",
+        content: text
+      });
 
-    const smsUrl = `http://smsoffice.ge/api/v2/send/?${queryParams.toString()}`;
-    const response = await fetch(smsUrl, { method: 'GET' });
-
-    if (!response.ok) {
-      console.error("SMS Office Error:", await response.text());
-    }
+      const smsUrl = `http://smsoffice.ge/api/v2/send/?${queryParams.toString()}`;
+      try {
+        const response = await fetch(smsUrl, { method: 'GET' });
+        if (!response.ok) {
+          console.error(`SMS Office Error for ${targetNum}:`, await response.text());
+        }
+      } catch (smsErr) {
+        console.error(`Failed to send SMS to ${targetNum}:`, smsErr);
+      }
+    }));
 
     // Return the real database order ID back to the client so the user sees "Order #581 placed!"
     return NextResponse.json({ success: true, orderId: insertedOrder.id || orderId });

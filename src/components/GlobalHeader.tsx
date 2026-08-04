@@ -7,7 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
 import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
-import { Home, Hotel, Map, Phone } from 'lucide-react';
+import { Home, Hotel, Map, Phone, Utensils } from 'lucide-react';
 
 export default function GlobalHeader() {
   const { t } = useLanguage();
@@ -29,8 +29,8 @@ export default function GlobalHeader() {
             <nav className="hidden md:flex items-center gap-6">
               {[
                 { href: '/', label: t.home },
+                { href: '/reservation', label: t.bookTable },
                 { href: '/hotel', label: t.hotel },
-                { href: '/streetview', label: t.streetview },
                 { href: '/contact', label: t.contact },
               ].map((link) => (
                 <Link 
@@ -68,13 +68,13 @@ export default function GlobalHeader() {
               <Home size={22} />
               <span className="text-[10px] font-bold">{t.home}</span>
             </Link>
+            <Link href="/reservation" className={classNames("flex flex-col items-center justify-center gap-1 p-2 rounded-xl transition-all flex-1 h-full", pathname === "/reservation" ? "text-primary bg-secondary" : "text-muted-foreground hover:text-foreground hover:bg-secondary/50")}>
+              <Utensils size={22} />
+              <span className="text-[10px] font-bold">{t.bookTable}</span>
+            </Link>
             <Link href="/hotel" className={classNames("flex flex-col items-center justify-center gap-1 p-2 rounded-xl transition-all flex-1 h-full", pathname === "/hotel" ? "text-primary bg-secondary" : "text-muted-foreground hover:text-foreground hover:bg-secondary/50")}>
               <Hotel size={22} />
               <span className="text-[10px] font-bold">{t.hotel}</span>
-            </Link>
-            <Link href="/streetview" className={classNames("flex flex-col items-center justify-center gap-1 p-2 rounded-xl transition-all flex-1 h-full", pathname === "/streetview" ? "text-primary bg-secondary" : "text-muted-foreground hover:text-foreground hover:bg-secondary/50")}>
-              <Map size={22} />
-              <span className="text-[10px] font-bold">{t.streetview}</span>
             </Link>
             <Link href="/contact" className={classNames("flex flex-col items-center justify-center gap-1 p-2 rounded-xl transition-all flex-1 h-full", pathname === "/contact" ? "text-primary bg-secondary" : "text-muted-foreground hover:text-foreground hover:bg-secondary/50")}>
               <Phone size={22} />

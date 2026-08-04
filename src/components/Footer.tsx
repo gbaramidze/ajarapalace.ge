@@ -26,6 +26,7 @@ export default function Footer() {
             <h4 className="font-bold uppercase tracking-wider text-sm">{t.categories}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="/" className="hover:text-primary transition-colors">{t.home}</a></li>
+              <li><a href="/reservation" className="hover:text-primary transition-colors">{t.bookTable}</a></li>
               <li><a href="/hotel" className="hover:text-primary transition-colors">{t.hotel}</a></li>
               <li><a href="/contact" className="hover:text-primary transition-colors">{t.contact}</a></li>
             </ul>
@@ -45,8 +46,19 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Ajara Palace. All rights reserved.
+        <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <p>© {new Date().getFullYear()} Ajara Palace. All rights reserved.</p>
+          <p>
+            {t.poweredBy}{' '}
+            <a
+              href="https://restiq.ge"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-foreground hover:text-primary transition-colors underline underline-offset-4"
+            >
+              RestIQ
+            </a>
+          </p>
         </div>
       </div>
     </footer>
